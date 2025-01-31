@@ -80,7 +80,7 @@ function NavBar() {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               sx={{
-                color: theme.palette.primary.main,
+                color: "#333",
                 // color: scrolled ? "#fff" : "#ffff",
               }}
               color="inherit"
@@ -113,10 +113,11 @@ function NavBar() {
                   key={page.route}
                   onClick={() => handleNavLinkClick(page.route)}
                   selected={currentPath === page.route}
+                  sx={{ color: "#333" }}
                 >
                   <Typography
                     sx={{
-                      color: theme.palette.primary.main,
+                      color: "#333",
                       fontSize: "18px",
                       fontWeight: isPathMatch(currentPath, page.route)
                         ? 600
