@@ -16,7 +16,7 @@ export default function MainLayout({ children }: Props) {
 
       <Box
         sx={{
-          minHeight: currentPath === "/contact-us" ? "50vh" : "100vh",
+          minHeight: "100vh",
           paddingTop: currentPath !== "/" ? "8rem" : "",
           backgroundColor: "transparent",
         }}

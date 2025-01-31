@@ -20,7 +20,7 @@ import {
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type BikesPageProps = {
   bikes: Bike[];
@@ -60,9 +60,34 @@ const BikesPage: React.FC<BikesPageProps> = ({
   const debouncedSearch = useDebounce(search, 500);
   const [currentPageState, setCurrentPageState] = useState<number>(currentPage);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoadingCount, setIsLoadingCount] = useState<boolean>(false);
+
   const [bikesFromClient, setBikesFromClient] = useState<Bike[]>(bikes);
   const { enqueueSnackbar } = useSnackbar();
   const [theftsCount, setTheftsCount] = useState<number>(theftsCountCases);
+
+  const getTheftCount = useCallback(async () => {
+    setIsLoadingCount(true);
+    try {
+      const theftCountResponse: any = await axios.get(
+        `https://bikeindex.org/api/v3/search/count?query=${debouncedSearch}&location=Munich&stolenness=proximity`
+      );
+
+      setTheftsCount(theftCountResponse?.data?.stolen || 0);
+    } catch (error: any) {
+      console.log("Error fetching theft count:", error);
+      enqueueSnackbar(error?.message || "Something went wrong", {
+        variant: "error",
+      });
+    }
+    setIsLoadingCount(false);
+  }, [debouncedSearch]);
+
+  useEffect(() => {
+    if (debouncedSearch?.trim().length > 0) {
+      getTheftCount();
+    }
+  }, [debouncedSearch]);
 
   const fetchBikes = async (page: number) => {
     const params = new URLSearchParams();
@@ -87,13 +112,7 @@ const BikesPage: React.FC<BikesPageProps> = ({
           debouncedSearch && `&query=${debouncedSearch}`
         }&location=Munich&stolenness=proximity`
       );
-      // const theftCountResponse: any = await axios.get(
-      //   `https://bikeindex.org:443/api/v3/search/count${
-      //     debouncedSearch && `?query=${debouncedSearch}`
-      //   }&location=Munich&stolenness=proximity`
-      // );
-      // console.log("theftCountResponse", theftCountResponse);
-      // setTheftsCount(theftCountResponse?.stolen);
+
       const newBikes = response?.data?.bikes;
 
       setBikesFromClient(newBikes);
@@ -147,16 +166,30 @@ const BikesPage: React.FC<BikesPageProps> = ({
 
   return (
     <Container maxWidth={MAIN_CONTAINER_BREAK_POINT} sx={{ padding: "4rem 0" }}>
-      {theftsCount && theftsCount > 0 && (
-        <Typography
-          sx={{
-            fontSize: "1.5rem",
-            paddingBottom: "2rem",
-            textAlign: "center",
-          }}
-        >
-          The total number of bike theft cases {theftsCount}
-        </Typography>
+      {isLoadingCount ? (
+        <Box>
+          <CircularProgress
+            size="2rem"
+            sx={{
+              display: "block",
+              margin: "0 auto",
+              marginBottom: "2rem",
+            }}
+          />
+        </Box>
+      ) : (
+        theftsCount &&
+        theftsCount > 0 && (
+          <Typography
+            sx={{
+              fontSize: "1.5rem",
+              paddingBottom: "2rem",
+              textAlign: "center",
+            }}
+          >
+            The total number of bike theft cases: {theftsCount}
+          </Typography>
+        )
       )}
       <Box
         sx={{
@@ -208,11 +241,17 @@ const BikesPage: React.FC<BikesPageProps> = ({
       </Box>
 
       <Grid container spacing={2} sx={{ marginTop: "2rem" }}>
-        {bikesFromClient.map((bike) => (
-          <Grid item xs={12} sm={6} key={bike.id}>
-            <BikeCard bike={bike} />
+        {bikesFromClient.length === 0 ? (
+          <Grid item xs={12}>
+            <Typography align="center">No bikes available</Typography>
           </Grid>
-        ))}
+        ) : (
+          bikesFromClient.map((bike) => (
+            <Grid item xs={12} sm={6} key={bike.id}>
+              <BikeCard bike={bike} />
+            </Grid>
+          ))
+        )}
       </Grid>
 
       <Backdrop
@@ -222,20 +261,22 @@ const BikesPage: React.FC<BikesPageProps> = ({
         <CircularProgress color="inherit" />
       </Backdrop>
 
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "3rem",
-        }}
-      >
-        <Pagination
-          count={Math.ceil(theftsCount / 10)}
-          page={currentPageState}
-          onChange={handlePageChange}
-          color="primary"
-        />
-      </Box>
+      {bikesFromClient && bikesFromClient.length > 0 && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "3rem",
+          }}
+        >
+          <Pagination
+            count={Math.ceil(theftsCount / 10)}
+            page={currentPageState}
+            onChange={handlePageChange}
+            color="primary"
+          />
+        </Box>
+      )}
     </Container>
   );
 };

@@ -46,17 +46,6 @@ function NavBar() {
       name: "Stolen bikes",
       route: "/stolen-bikes",
     },
-
-    {
-      name: "About us",
-      route: "/about-us",
-    },
-  ];
-  const subPages = [
-    {
-      name: "Contact us",
-      route: "/contact-us",
-    },
   ];
 
   return (
@@ -108,7 +97,7 @@ function NavBar() {
                 },
               }}
             >
-              {[...mainPages, ...subPages].map((page: any) => (
+              {[...mainPages].map((page: any) => (
                 <MenuItem
                   key={page.route}
                   onClick={() => handleNavLinkClick(page.route)}
@@ -160,32 +149,6 @@ function NavBar() {
                 {page.name}
               </Button>
             ))}
-          </Box>
-
-          <Box sx={{ flexGrow: 0, display: "flex" }}>
-            <Box display={{ xs: "none", md: "block" }}>
-              {subPages.map((page) => (
-                <Button
-                  aria-label={page.name}
-                  key={page.route}
-                  onClick={() => handleNavLinkClick(page.route)}
-                  sx={{
-                    my: 2,
-                    display: "block",
-                    fontSize: "1rem",
-                    fontWeight: isPathMatch(currentPath, page.route)
-                      ? 600
-                      : 500,
-                    textTransform: "capitalize",
-                    paddingX: 0,
-                    marginInlineEnd: 2,
-                    color: theme.palette.primary.main,
-                  }}
-                >
-                  {page.name}
-                </Button>
-              ))}
-            </Box>
           </Box>
         </Toolbar>
       </Container>
