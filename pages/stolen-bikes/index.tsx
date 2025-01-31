@@ -1,6 +1,8 @@
 import BikeCard from "@/components/bikes/BikeCard";
 import { MAIN_CONTAINER_BREAK_POINT } from "@/constants/general";
 import { Bike } from "@/types/Bike";
+import { Query } from "@/types/Query";
+import { TheftCountResponse } from "@/types/TheftCountResponse";
 import { useDebounce } from "@/utils/helper";
 import {
   Backdrop,
@@ -13,11 +15,12 @@ import {
   MenuItem,
   Pagination,
   Select,
+  SelectChangeEvent,
   styled,
   Typography,
   useTheme,
 } from "@mui/material";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
@@ -25,15 +28,9 @@ import { useCallback, useEffect, useState } from "react";
 type BikesPageProps = {
   bikes: Bike[];
   currentPage: number;
-  totalPages: number;
   theftsCountCases: number;
 };
 
-type Query = {
-  page?: number;
-  sort?: string;
-  search?: string;
-};
 const StyledInput = styled(InputBase)(({ theme }) => ({
   "& .MuiInputBase-input": {
     borderRadius: 10,
@@ -50,7 +47,6 @@ const StyledInput = styled(InputBase)(({ theme }) => ({
 const BikesPage: React.FC<BikesPageProps> = ({
   bikes,
   currentPage,
-  totalPages,
   theftsCountCases,
 }) => {
   const theme = useTheme();
@@ -61,7 +57,6 @@ const BikesPage: React.FC<BikesPageProps> = ({
   const [currentPageState, setCurrentPageState] = useState<number>(currentPage);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingCount, setIsLoadingCount] = useState<boolean>(false);
-
   const [bikesFromClient, setBikesFromClient] = useState<Bike[]>(bikes);
   const { enqueueSnackbar } = useSnackbar();
   const [theftsCount, setTheftsCount] = useState<number>(theftsCountCases);
@@ -69,16 +64,22 @@ const BikesPage: React.FC<BikesPageProps> = ({
   const getTheftCount = useCallback(async () => {
     setIsLoadingCount(true);
     try {
-      const theftCountResponse: any = await axios.get(
+      const theftCountResponse: TheftCountResponse = await axios.get(
         `https://bikeindex.org/api/v3/search/count?query=${debouncedSearch}&location=Munich&stolenness=proximity`
       );
 
       setTheftsCount(theftCountResponse?.data?.stolen || 0);
-    } catch (error: any) {
-      console.log("Error fetching theft count:", error);
-      enqueueSnackbar(error?.message || "Something went wrong", {
-        variant: "error",
-      });
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        enqueueSnackbar(
+          error.response?.data || error?.message || "Something went wrong",
+          {
+            variant: "error",
+          }
+        );
+      } else {
+        console.error(error);
+      }
     }
     setIsLoadingCount(false);
   }, [debouncedSearch]);
@@ -138,7 +139,16 @@ const BikesPage: React.FC<BikesPageProps> = ({
         { shallow: true }
       );
     } catch (error) {
-      enqueueSnackbar("Something went wrong", { variant: "error" });
+      if (error instanceof AxiosError) {
+        enqueueSnackbar(
+          error.response?.data || error?.message || "Something went wrong",
+          {
+            variant: "error",
+          }
+        );
+      } else {
+        console.error(error);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -153,8 +163,8 @@ const BikesPage: React.FC<BikesPageProps> = ({
     setSearch(event.target.value);
   };
 
-  const handleSortChange = (event: any) => {
-    setSort(event.target.value as string);
+  const handleSortChange = (event: SelectChangeEvent<string | string[]>) => {
+    setSort(event.target.value);
   };
 
   const handlePageChange = (
@@ -289,7 +299,7 @@ export const getServerSideProps = async () => {
       "https://bikeindex.org:443/api/v3/search?page=1&per_page=10&location=Munich&stolenness=proximity"
     );
 
-    const theftCountResponse: any = await axios.get(
+    const theftCountResponse: TheftCountResponse = await axios.get(
       `https://bikeindex.org:443/api/v3/search/count?location=Munich&stolenness=proximity`
     );
     const bikes = res?.data?.bikes;
@@ -299,17 +309,19 @@ export const getServerSideProps = async () => {
       props: {
         bikes,
         currentPage: 1,
-        totalPages: Math.ceil(theftsCountCases / 10),
         theftsCountCases,
       },
     };
-  } catch (error: any) {
-    console.log(error);
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.error(error.response?.data || error.message);
+    } else {
+      console.error(error);
+    }
     return {
       props: {
         bikes: [],
         currentPage: 1,
-        totalPages: 1,
         theftsCountCases: 1,
       },
     };

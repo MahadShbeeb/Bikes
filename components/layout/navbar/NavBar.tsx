@@ -15,6 +15,7 @@ import { MAIN_CONTAINER_BREAK_POINT } from "../../../constants/general";
 import { useTheme } from "@mui/material/styles";
 import { usePathname } from "next/navigation";
 import { isPathMatch } from "@/utils/helper";
+import { MainPage } from "@/types/MainPage";
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -37,7 +38,7 @@ function NavBar() {
     setAnchorElNav(null);
   };
 
-  const mainPages = [
+  const mainPages: MainPage[] = [
     {
       name: "HOME",
       route: "/",
@@ -97,7 +98,7 @@ function NavBar() {
                 },
               }}
             >
-              {[...mainPages].map((page: any) => (
+              {mainPages.map((page) => (
                 <MenuItem
                   key={page.route}
                   onClick={() => handleNavLinkClick(page.route)}

@@ -1,9 +1,8 @@
-import axiosInstance from "@/axios/AxiosInstance";
 import BikeDetails from "@/components/bikes/BikeDetails";
 import { MAIN_CONTAINER_BREAK_POINT } from "@/constants/general";
 import { Bike } from "@/types/Bike";
 import { Container } from "@mui/material";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import React from "react";
 
 type BikePageProps = {
@@ -34,13 +33,17 @@ export const getServerSideProps = async ({
 
     const bike = res?.data?.bike;
 
-    console.log("bike", bike);
     return {
       props: {
         bike,
       },
     };
-  } catch (error: any) {
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.error(error.response?.data || error.message);
+    } else {
+      console.error(error);
+    }
     return {
       notFound: true,
     };
