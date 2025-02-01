@@ -1,5 +1,5 @@
 import { Bike } from "@/types/Bike";
-import { Box, Grid, Typography, useTheme } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
@@ -9,14 +9,12 @@ type BikeCardProps = {
 };
 
 const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
-  const theme = useTheme();
-
   return (
     <Grid
       container
       sx={{
         height: "17rem",
-        border: "1px solid #E9E9E9",
+        border: "1px solid #F5F5F5",
         borderRadius: "10px",
       }}
     >
@@ -67,7 +65,7 @@ const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
               <Box
                 sx={{
                   borderRadius: "10px",
-                  background: "#E9E9E9",
+                  background: "#F5F5F5",
                   padding: ".1rem 1rem",
                 }}
               >
@@ -78,7 +76,7 @@ const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
               <Box
                 sx={{
                   borderRadius: "10px",
-                  background: "#E9E9E9",
+                  background: "#F5F5F5",
                   padding: ".1rem 1rem",
                 }}
               >
@@ -89,7 +87,7 @@ const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
               <Box
                 sx={{
                   borderRadius: "10px",
-                  background: "#E9E9E9",
+                  background: "#F5F5F5",
                   padding: ".1rem 1rem",
                 }}
               >
@@ -110,7 +108,6 @@ const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
               WebkitLineClamp: 1,
               overflow: "hidden",
               height: "2rem",
-              color: theme.palette.primary.main,
             }}
           >
             {bike?.title}
@@ -143,8 +140,8 @@ const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
           <Link
             style={{
               textDecoration: "none",
-              color: theme.palette.primary.main,
               fontWeight: 500,
+              color: "#F0A04B",
             }}
             href={`/stolen-bikes/${bike?.id}`}
           >

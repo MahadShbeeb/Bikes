@@ -12,7 +12,6 @@ import MenuItem from "@mui/material/MenuItem";
 import { useRouter } from "next/router";
 
 import { MAIN_CONTAINER_BREAK_POINT } from "../../../constants/general";
-import { useTheme } from "@mui/material/styles";
 import { usePathname } from "next/navigation";
 import { isPathMatch } from "@/utils/helper";
 import { MainPage } from "@/types/MainPage";
@@ -23,7 +22,6 @@ function NavBar() {
   );
   const router = useRouter();
   const currentPath = usePathname();
-  const theme = useTheme();
 
   const handleNavLinkClick = (route: string) => {
     setAnchorElNav(null);
@@ -55,8 +53,8 @@ function NavBar() {
       color="transparent"
       sx={{
         boxShadow: "none",
-        backgroundColor: theme.palette.background.default,
-        color: "#333",
+        backgroundColor: "#fff",
+        // color: "#333",
         transition: "background-color 0.3s ease",
       }}
     >
@@ -69,10 +67,11 @@ function NavBar() {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              sx={{
-                color: "#333",
-                // color: scrolled ? "#fff" : "#ffff",
-              }}
+              sx={
+                {
+                  // color: "#333",
+                }
+              }
               color="inherit"
             >
               <MenuIcon />
@@ -93,9 +92,7 @@ function NavBar() {
               onClose={handleCloseNavMenu}
               sx={{
                 display: { xs: "block", md: "none" },
-                "& .MuiPaper-root": {
-                  backgroundColor: theme.palette.background.default,
-                },
+                "& .MuiPaper-root": {},
               }}
             >
               {mainPages.map((page) => (
@@ -103,11 +100,11 @@ function NavBar() {
                   key={page.route}
                   onClick={() => handleNavLinkClick(page.route)}
                   selected={currentPath === page.route}
-                  sx={{ color: "#333" }}
+                  // sx={{ color: "#333" }}
                 >
                   <Typography
                     sx={{
-                      color: "#333",
+                      // color: "#333",
                       fontSize: "18px",
                       fontWeight: isPathMatch(currentPath, page.route)
                         ? 600
@@ -143,8 +140,8 @@ function NavBar() {
                   textTransform: "capitalize",
                   paddingX: "0 !important",
                   marginInlineEnd: 2,
-                  color: theme.palette.primary.main,
-                  // color: "#fff",
+                  color: "#2A3C49",
+                  fontFamily: "Segoe UI",
                 }}
               >
                 {page.name}

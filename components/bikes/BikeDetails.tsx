@@ -1,4 +1,3 @@
-import axiosInstance from "@/axios/AxiosInstance";
 import { Bike } from "@/types/Bike";
 import { Box, Grid, Typography } from "@mui/material";
 import Image from "next/image";
@@ -37,7 +36,7 @@ const BikeDetails: React.FC<BikeDetailsProps> = ({ bike }) => {
                 <Box
                   sx={{
                     borderRadius: "10px",
-                    background: "#E9E9E9",
+                    background: "#F5F5F5",
                     padding: ".1rem 1rem",
                   }}
                 >
@@ -48,7 +47,7 @@ const BikeDetails: React.FC<BikeDetailsProps> = ({ bike }) => {
                 <Box
                   sx={{
                     borderRadius: "10px",
-                    background: "#E9E9E9",
+                    background: "#F5F5F5",
                     padding: ".1rem 1rem",
                   }}
                 >
@@ -59,7 +58,7 @@ const BikeDetails: React.FC<BikeDetailsProps> = ({ bike }) => {
                 <Box
                   sx={{
                     borderRadius: "10px",
-                    background: "#E9E9E9",
+                    background: "#F5F5F5",
                     padding: ".1rem 1rem",
                   }}
                 >
@@ -98,16 +97,11 @@ const BikeDetails: React.FC<BikeDetailsProps> = ({ bike }) => {
           md={4}
           sx={{
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "flex-end",
             alignItems: "center",
-            background: "#F3F3F3",
-            borderRadius: 2,
-            padding: 3,
-            my: 4,
-            // order: { md: 2, xs: 1 },
           }}
         >
-          <Box sx={{ position: "relative", width: "100%", height: "15rem" }}>
+          <Box sx={{ position: "relative", width: "100%", height: "20rem" }}>
             <Image
               src={bike?.large_img || "/assets/images/placeholder.jpg"}
               alt="Logo"

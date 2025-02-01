@@ -18,7 +18,6 @@ import {
   SelectChangeEvent,
   styled,
   Typography,
-  useTheme,
 } from "@mui/material";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
@@ -31,16 +30,14 @@ type BikesPageProps = {
   theftsCountCases: number;
 };
 
-const StyledInput = styled(InputBase)(({ theme }) => ({
+const StyledInput = styled(InputBase)(({}) => ({
   "& .MuiInputBase-input": {
     borderRadius: 10,
     position: "relative",
-    background: "#E9E9E9",
+    background: "#F5F5F5",
     fontSize: 16,
     padding: "10px 40px 10px 20px",
-    "&:focus": {
-      borderColor: theme.palette.primary.main,
-    },
+    "&:focus": {},
   },
 }));
 
@@ -49,7 +46,6 @@ const BikesPage: React.FC<BikesPageProps> = ({
   currentPage,
   theftsCountCases,
 }) => {
-  const theme = useTheme();
   const router = useRouter();
   const [sort, setSort] = useState(router.query.sort || "default");
   const [search, setSearch] = useState(router.query.search || "");
@@ -193,8 +189,8 @@ const BikesPage: React.FC<BikesPageProps> = ({
           <Typography
             sx={{
               fontSize: "1.5rem",
-              paddingBottom: "2rem",
               textAlign: "center",
+              fontFamily: "Segoe UI",
             }}
           >
             The total number of bike theft cases: {theftsCount}
@@ -209,7 +205,7 @@ const BikesPage: React.FC<BikesPageProps> = ({
           margin: "3rem 0",
           display: "flex",
           alignItems: "center",
-          background: "#E9E9E9",
+          background: "#F5F5F5",
         }}
       >
         <input
@@ -221,8 +217,8 @@ const BikesPage: React.FC<BikesPageProps> = ({
             outline: "none",
             width: "100%",
             marginInline: "1rem",
-            color: theme.palette.primary.main,
-            background: "#E9E9E9",
+            background: "#F5F5F5",
+            fontFamily: "Segoe UI",
           }}
         />
       </Box>
@@ -236,11 +232,14 @@ const BikesPage: React.FC<BikesPageProps> = ({
       >
         <FormControl variant="outlined">
           <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-            <Typography sx={{ fontSize: 16 }}>Sort by</Typography>
+            <Typography sx={{ fontSize: 16, fontFamily: "Segoe UI" }}>
+              Sort by
+            </Typography>
             <Select
               value={sort}
               onChange={handleSortChange}
               input={<StyledInput />}
+              sx={{ fontFamily: "Segoe UI" }}
             >
               <MenuItem value="default">Default</MenuItem>
               <MenuItem value="date">Date</MenuItem>
@@ -253,7 +252,12 @@ const BikesPage: React.FC<BikesPageProps> = ({
       <Grid container spacing={2} sx={{ marginTop: "2rem" }}>
         {bikesFromClient.length === 0 ? (
           <Grid item xs={12}>
-            <Typography align="center">No bikes available</Typography>
+            <Typography
+              align="center"
+              sx={{ fontFamily: "Segoe UI", fontSize: "1.5rem" }}
+            >
+              No bikes available
+            </Typography>
           </Grid>
         ) : (
           bikesFromClient.map((bike) => (

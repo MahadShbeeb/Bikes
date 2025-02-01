@@ -9,7 +9,7 @@ export default function App({ Component, pageProps }: AppProps) {
       sx={{
         minHeight: "100vh",
         backgroundColor: "#fff",
-        color: "#333",
+        // color: "#333",
       }}
     >
       <CssBaseline />
