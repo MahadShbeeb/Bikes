@@ -70,6 +70,36 @@ A web application designed to help Munich police efficiently track and manage st
   Math.ceil(theftsCount / 10);
   ```
 
+## 🏗️ States for Better UX
+
+This application includes different states to handle various scenarios during the bike theft data fetching and display process:
+
+1. **Loading State**:  
+   Displays a loading indicator while the data is being fetched. This is implemented using the `<Backdrop>` and `<CircularProgress>` components from Material-UI.
+
+   ```jsx
+   <Backdrop
+     sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
+     open={isLoading}
+   >
+     <CircularProgress color="inherit" />
+   </Backdrop>
+   ```
+
+   2. **Error State**:  
+      Displays an error snackbar indicates an error happening.
+
+```jsx
+enqueueSnackbar(
+  error.response?.data || error?.message || "Something went wrong",
+  {
+    variant: "error",
+  }
+);
+```
+
+3.  **Empty State**: Just show a No available bikes expression
+
 - **pages/**:
   - **stolen-bikes/**: Main page displaying the list of stolen bikes with pagination, search, and sort functionality. Dynamic route for detailed bike theft case information.
   - **[id]**: dynamic route to display more about bikes details .
@@ -88,7 +118,7 @@ A web application designed to help Munich police efficiently track and manage st
 - **Empty Bike Cases List**  
   The response for bike cases is an **empty array**.
 
-  ![Empty Bike Cases List](./assets/images/search-giant-empty.png)
+  ![Empty Bike Cases List](./public/assets/images/search-giant-empty.png)
 
 ### 2. **Filtering and Sorting**
 
@@ -112,5 +142,3 @@ View the total number of reported theft cases dynamically.
 
 🔮 Future Improvements
 Custom Backend: Implement a backend service to handle filtering by title and date range.
-Enhanced API Handling: Add better error handling for inconsistent API responses.
-Unit Tests: Add unit tests for core components and helper functions.
