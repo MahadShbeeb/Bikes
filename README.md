@@ -4,6 +4,18 @@ A web application designed to help Munich police efficiently track and manage st
 
 ---
 
+## 🛠️ Tools and Technologies
+
+This project was built using the following tools and technologies:
+
+-**Next.js:**
+A React framework for server-side rendering and building web applications. -**Material-UI (MUI):**
+A React UI library for building modern, accessible, and responsive components. -**Notistack:**
+A notification library for displaying snackbars with ease and customization. -
+**Axios:**
+For making API requests. -**TypeScript:**
+For type safety and better developer experience.
+
 ## 🚀 Features
 
 - **Bike Theft Cases List**  
