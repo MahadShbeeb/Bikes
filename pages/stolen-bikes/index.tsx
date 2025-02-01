@@ -1,4 +1,7 @@
-import BikeCard from "@/components/bikes/BikeCard";
+import BikesList from "@/components/bikes/BikesList";
+import SearchInput from "@/components/bikes/SearchInput";
+import SortSelect from "@/components/bikes/SortSelect";
+import TotalTheftCases from "@/components/bikes/TotalTheftCases";
 import { MAIN_CONTAINER_BREAK_POINT } from "@/constants/general";
 import { Bike } from "@/types/Bike";
 import { Query } from "@/types/Query";
@@ -9,37 +12,19 @@ import {
   Box,
   CircularProgress,
   Container,
-  FormControl,
-  Grid,
-  InputBase,
-  MenuItem,
   Pagination,
-  Select,
   SelectChangeEvent,
-  styled,
-  Typography,
 } from "@mui/material";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type BikesPageProps = {
   bikes: Bike[];
   currentPage: number;
   theftsCountCases: number;
 };
-
-const StyledInput = styled(InputBase)(({}) => ({
-  "& .MuiInputBase-input": {
-    borderRadius: 10,
-    position: "relative",
-    background: "#F5F5F5",
-    fontSize: 16,
-    padding: "10px 40px 10px 20px",
-    "&:focus": {},
-  },
-}));
 
 const BikesPage: React.FC<BikesPageProps> = ({
   bikes,
@@ -52,39 +37,13 @@ const BikesPage: React.FC<BikesPageProps> = ({
   const debouncedSearch = useDebounce(search, 500);
   const [currentPageState, setCurrentPageState] = useState<number>(currentPage);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isLoadingCount, setIsLoadingCount] = useState<boolean>(false);
   const [bikesFromClient, setBikesFromClient] = useState<Bike[]>(bikes);
   const { enqueueSnackbar } = useSnackbar();
-  const [theftsCount, setTheftsCount] = useState<number>(theftsCountCases);
 
-  const getTheftCount = useCallback(async () => {
-    setIsLoadingCount(true);
-    try {
-      const theftCountResponse: TheftCountResponse = await axios.get(
-        `https://bikeindex.org/api/v3/search/count?query=${debouncedSearch}&location=Munich&stolenness=proximity`
-      );
-
-      setTheftsCount(theftCountResponse?.data?.stolen || 0);
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        enqueueSnackbar(
-          error.response?.data || error?.message || "Something went wrong",
-          {
-            variant: "error",
-          }
-        );
-      } else {
-        console.error(error);
-      }
-    }
-    setIsLoadingCount(false);
-  }, [debouncedSearch]);
-
-  useEffect(() => {
-    if (debouncedSearch?.trim().length > 0) {
-      getTheftCount();
-    }
-  }, [debouncedSearch]);
+  const [theftsCount, setTheftsCount] = useState<number>(0);
+  const handleTheftsCountUpdate = (count: number) => {
+    setTheftsCount(count);
+  };
 
   const fetchBikes = async (page: number) => {
     const params = new URLSearchParams();
@@ -172,56 +131,12 @@ const BikesPage: React.FC<BikesPageProps> = ({
 
   return (
     <Container maxWidth={MAIN_CONTAINER_BREAK_POINT} sx={{ padding: "4rem 0" }}>
-      {isLoadingCount ? (
-        <Box>
-          <CircularProgress
-            size="2rem"
-            sx={{
-              display: "block",
-              margin: "0 auto",
-              marginBottom: "2rem",
-            }}
-          />
-        </Box>
-      ) : (
-        theftsCount &&
-        theftsCount > 0 && (
-          <Typography
-            sx={{
-              fontSize: "1.5rem",
-              textAlign: "center",
-              fontFamily: "Segoe UI",
-            }}
-          >
-            The total number of bike theft cases: {theftsCount}
-          </Typography>
-        )
-      )}
-      <Box
-        sx={{
-          width: "100%",
-          borderRadius: "10px",
-          height: "3rem",
-          margin: "3rem 0",
-          display: "flex",
-          alignItems: "center",
-          background: "#F5F5F5",
-        }}
-      >
-        <input
-          value={search}
-          onChange={handleSearchChange}
-          placeholder={"Search..."}
-          style={{
-            border: "none",
-            outline: "none",
-            width: "100%",
-            marginInline: "1rem",
-            background: "#F5F5F5",
-            fontFamily: "Segoe UI",
-          }}
-        />
-      </Box>
+      <TotalTheftCases
+        debouncedSearch={debouncedSearch}
+        theftsCountCases={theftsCountCases}
+        onTheftsCountChange={handleTheftsCountUpdate}
+      />
+      <SearchInput search={search} handleSearchChange={handleSearchChange} />
       <Box
         sx={{
           display: "flex",
@@ -230,67 +145,33 @@ const BikesPage: React.FC<BikesPageProps> = ({
           gap: "1rem",
         }}
       >
-        <FormControl variant="outlined">
-          <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-            <Typography sx={{ fontSize: 16, fontFamily: "Segoe UI" }}>
-              Sort by
-            </Typography>
-            <Select
-              value={sort}
-              onChange={handleSortChange}
-              input={<StyledInput />}
-              sx={{ fontFamily: "Segoe UI" }}
-            >
-              <MenuItem value="default">Default</MenuItem>
-              <MenuItem value="date">Date</MenuItem>
-              <MenuItem value="title">Title</MenuItem>
-            </Select>
-          </Box>
-        </FormControl>
+        <SortSelect sort={sort} handleSortChange={handleSortChange} />
       </Box>
-
-      <Grid container spacing={2} sx={{ marginTop: "2rem" }}>
-        {bikesFromClient.length === 0 ? (
-          <Grid item xs={12}>
-            <Typography
-              align="center"
-              sx={{ fontFamily: "Segoe UI", fontSize: "1.5rem" }}
-            >
-              No bikes available
-            </Typography>
-          </Grid>
-        ) : (
-          bikesFromClient.map((bike) => (
-            <Grid item xs={12} sm={6} key={bike.id}>
-              <BikeCard bike={bike} />
-            </Grid>
-          ))
-        )}
-      </Grid>
-
+      <BikesList bikes={bikesFromClient} />
       <Backdrop
         sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
         open={isLoading}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-
-      {bikesFromClient && bikesFromClient.length > 0 && (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "3rem",
-          }}
-        >
-          <Pagination
-            count={Math.ceil(theftsCount / 10)}
-            page={currentPageState}
-            onChange={handlePageChange}
-            color="primary"
-          />
-        </Box>
-      )}
+      {bikesFromClient &&
+        bikesFromClient.length > 0 &&
+        Math.ceil(theftsCount / 10) > 1 && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "3rem",
+            }}
+          >
+            <Pagination
+              count={Math.ceil(theftsCount / 10)}
+              page={currentPageState}
+              onChange={handlePageChange}
+              color="primary"
+            />
+          </Box>
+        )}
     </Container>
   );
 };
