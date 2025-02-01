@@ -137,7 +137,6 @@ This application includes different states to handle various scenarios during th
 
 View a paginated list of bike theft cases in Munich.
 Use the search bar to search cases by title .
-Sort cases using the dropdown (UI-only due to API limitations).
 
 ### 2. **Show more details**
 
