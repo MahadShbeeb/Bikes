@@ -50,6 +50,7 @@ A web application designed to help Munich police efficiently track and manage st
   - `useDebounce`: Implements a 500ms debounce for search functionality.
 - **assets/**: Includes images for the landing section and a bike card placeholder.
 - **components/**:
+
   - **Layouts**:
     - **Navbar**: Responsive navbar with a burger button for mobile view.
     - **MainLayout**: Wraps the navbar and main content.
@@ -64,11 +65,16 @@ A web application designed to help Munich police efficiently track and manage st
     - **NoBikesAvailable**: Displays when no results are found.
     - **TotalTheftCases**: Shows the total number of theft cases and updates dynamically with search input.
     ### Explanation of the Pagination:
-- **Dynamic Pagination**: The pagination will calculate the total number of pages based on the total theft count returned by the API using the equation:
+    - **Dynamic Pagination**: The pagination will calculate the total number of pages based on the total theft count returned by the API using the equation:
+      ```js
+      Math.ceil(theftsCount / 10);
+      ```
 
-  ```js
-  Math.ceil(theftsCount / 10);
-  ```
+- **pages/**:
+  - **stolen-bikes/**: Main page displaying the list of stolen bikes with pagination, search, and sort functionality. Dynamic route for detailed bike theft case information.
+  - **[id]**: dynamic route to display more about bikes details .
+
+---
 
 ## 🏗️ States for Better UX
 
@@ -86,25 +92,20 @@ This application includes different states to handle various scenarios during th
    </Backdrop>
    ```
 
-   2. **Error State**:  
-      Displays an error snackbar indicates an error happening.
+2. **Error State**:  
+   Displays an error snackbar indicates an error happening.
 
-```jsx
-enqueueSnackbar(
-  error.response?.data || error?.message || "Something went wrong",
-  {
-    variant: "error",
-  }
-);
-```
+   ```jsx
+   enqueueSnackbar(
+     error.response?.data || error?.message || "Something went wrong",
+     {
+       variant: "error",
+     }
+   );
+   ```
 
-3.  **Empty State**: Just show a No available bikes expression
-
-- **pages/**:
-  - **stolen-bikes/**: Main page displaying the list of stolen bikes with pagination, search, and sort functionality. Dynamic route for detailed bike theft case information.
-  - **[id]**: dynamic route to display more about bikes details .
-
----
+3. **Empty State**:
+   Just show a No available bikes expression
 
 ## 📊 Technical Challenges
 
@@ -113,7 +114,7 @@ enqueueSnackbar(
 - **Theft Count Response**  
   The API returns a theft count of **9900**, but no results are displayed.
 
-  ![API Theft Count Response](./assets/images/search-giant-count.png)
+  ![API Theft Count Response](./public/assets/images/search-giant-count.png)
 
 - **Empty Bike Cases List**  
   The response for bike cases is an **empty array**.
