@@ -130,16 +130,21 @@ This application includes different states to handle various scenarios during th
 - **Inconsistent API Responses**  
   Example: Searching with the keyword "giant" returns a theft count of 9900, but the actual cases array is empty. This inconsistency impacts the user experience and filtering logic.
 
-  ```
+## Navigate to the Stolen Bikes page.
 
-  ```
+### 1. **Paginate bikes and search**
 
-Navigate to the Stolen Bikes page.
 View a paginated list of bike theft cases in Munich.
-Use the search bar to filter cases by title (UI-only due to API limitations).
+Use the search bar to search cases by title .
 Sort cases using the dropdown (UI-only due to API limitations).
+
+### 2. **Show more details**
+
 Click on a bike case to view detailed information.
 View the total number of reported theft cases dynamically.
 
-🔮 Future Improvements
-Custom Backend: Implement a backend service to handle filtering by title and date range.
+## 🔮 Future Improvements.
+
+### 1. **Custom Backend:**
+
+Implement a backend service to handle filtering by title and date range.
