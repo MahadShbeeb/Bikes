@@ -45,9 +45,10 @@ A web application designed to help Munich police efficiently track and manage st
 - **axios/**: Contains the axios instance for API calls.
 - **types/**: Stores TypeScript type definitions for better code consistency.
 - **constants/**: Defines global constants like `MAIN_CONTAINER_BREAK_POINT` for setting the container width.
-- **helpers/**:
-  - `isPathMatch`: Highlights the active path in the navbar.
-  - `useDebounce`: Implements a 500ms debounce for search functionality.
+- **utils/**:
+  - **helper**:
+    - `isPathMatch`: Highlights the active path in the navbar.
+    - `useDebounce`: Implements a 500ms debounce for search functionality.
 - **assets/**: Includes images for the landing section and a bike card placeholder.
 - **components/**:
 
