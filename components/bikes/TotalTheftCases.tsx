@@ -1,6 +1,7 @@
+import axiosInstance from "@/axios/AxiosInstance";
 import { TheftCountResponse } from "@/types/TheftCountResponse";
 import { Box, CircularProgress, Typography } from "@mui/material";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useSnackbar } from "notistack";
 import React, { useCallback, useEffect, useState } from "react";
 
@@ -22,8 +23,8 @@ const TotalTheftCases: React.FC<TotalTheftCasesProps> = ({
   const getTheftCount = useCallback(async () => {
     setIsLoadingCount(true);
     try {
-      const theftCountResponse: TheftCountResponse = await axios.get(
-        `https://bikeindex.org/api/v3/search/count?query=${debouncedSearch}&location=Munich&stolenness=proximity`
+      const theftCountResponse: TheftCountResponse = await axiosInstance.get(
+        `/count?query=${debouncedSearch}&location=Munich&stolenness=proximity`
       );
 
       const count = theftCountResponse?.data?.stolen || 0;

@@ -1,6 +1,14 @@
-// next.config.js
 module.exports = {
   images: {
-    domains: ["files.bikeindex.org", "bikebook.s3.amazonaws.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "files.bikeindex.org",
+      },
+      {
+        protocol: "https",
+        hostname: "bikebook.s3.amazonaws.com",
+      },
+    ],
   },
 };

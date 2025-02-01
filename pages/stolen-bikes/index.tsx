@@ -1,3 +1,4 @@
+import axiosInstance from "@/axios/AxiosInstance";
 import BikesList from "@/components/bikes/BikesList";
 import SearchInput from "@/components/bikes/SearchInput";
 import SortSelect from "@/components/bikes/SortSelect";
@@ -15,7 +16,7 @@ import {
   Pagination,
   SelectChangeEvent,
 } from "@mui/material";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
@@ -63,8 +64,8 @@ const BikesPage: React.FC<BikesPageProps> = ({
     setIsLoading(true);
 
     try {
-      const response = await axios.get(
-        `https://bikeindex.org:443/api/v3/search?page=${page}&per_page=10${
+      const response = await axiosInstance.get(
+        `?page=${page}&per_page=10${
           debouncedSearch && `&query=${debouncedSearch}`
         }&location=Munich&stolenness=proximity`
       );
@@ -180,12 +181,12 @@ export default BikesPage;
 
 export const getServerSideProps = async () => {
   try {
-    const res = await axios.get(
-      "https://bikeindex.org:443/api/v3/search?page=1&per_page=10&location=Munich&stolenness=proximity"
+    const res = await axiosInstance.get(
+      "?page=1&per_page=10&location=Munich&stolenness=proximity"
     );
 
-    const theftCountResponse: TheftCountResponse = await axios.get(
-      `https://bikeindex.org:443/api/v3/search/count?location=Munich&stolenness=proximity`
+    const theftCountResponse: TheftCountResponse = await axiosInstance.get(
+      `/count?location=Munich&stolenness=proximity`
     );
     const bikes = res?.data?.bikes;
     const theftsCountCases = theftCountResponse?.data?.stolen;
