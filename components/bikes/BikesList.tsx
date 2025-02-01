@@ -21,7 +21,7 @@ const BikesList: React.FC<BikesListProps> = ({ bikes }) => {
         </Grid>
       ) : (
         bikes.map((bike) => (
-          <Grid item xs={12} sm={6} key={bike.id}>
+          <Grid item xs={12} md={6} key={bike.id}>
             <BikeCard bike={bike} />
           </Grid>
         ))

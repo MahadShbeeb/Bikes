@@ -131,7 +131,10 @@ const BikesPage: React.FC<BikesPageProps> = ({
   };
 
   return (
-    <Container maxWidth={MAIN_CONTAINER_BREAK_POINT} sx={{ padding: "4rem 0" }}>
+    <Container
+      maxWidth={MAIN_CONTAINER_BREAK_POINT}
+      sx={{ paddingBottom: "4rem" }}
+    >
       <TotalTheftCases
         debouncedSearch={debouncedSearch}
         theftsCountCases={theftsCountCases}

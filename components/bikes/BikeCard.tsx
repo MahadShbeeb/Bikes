@@ -13,8 +13,8 @@ const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
     <Grid
       container
       sx={{
-        height: "17rem",
-        border: "1px solid #F5F5F5",
+        height: { md: "17rem" },
+        border: "1px solid #E9E9E9",
         borderRadius: "10px",
       }}
     >
@@ -27,7 +27,13 @@ const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
           borderRadius: { md: "10px 0 0 10px", xs: "10px 10px 0 0" },
         }}
       >
-        <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
+        <Box
+          sx={{
+            position: "relative",
+            width: "100%",
+            height: { md: "100%", xs: "15rem" },
+          }}
+        >
           <Image
             alt=""
             src={bike?.large_img || "/assets/images/placeholder.jpg"}
